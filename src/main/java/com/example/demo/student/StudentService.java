@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -20,5 +21,15 @@ public class StudentService {
 
     public List<Student> getStudents(){
         return studentRepository.findAll();
+    }
+
+    public void addNewStudent(Student student){
+        Optional<Student> studentByEmail = studentRepository.findStudentByEmail(student.getEmail());
+
+        if(studentByEmail.isPresent()){
+            throw new IllegalStateException("Email taken");
+        }
+
+        this.studentRepository.save(student);
     }
 }
